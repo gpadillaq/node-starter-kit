@@ -1,12 +1,27 @@
 import prisma from "../db/prisma";
 
+import { PaginationDto } from "../domain";
 import { RegisterUserDto } from "../domain/dtos/user/register-user.dto";
 import { User } from "../types";
 
-export const getAllUsers = async (): Promise<User[]> => {
+export const getAllUsers = async (
+  paginationDto?: PaginationDto
+): Promise<User[]> => {
+  const pagination = {
+    ...(paginationDto && {
+      skip: (paginationDto.page - 1) * paginationDto.limit,
+      take: paginationDto.limit,
+    }),
+  };
+
   return prisma.user.findMany({
+    ...pagination,
     omit: { password: true },
   });
+};
+
+export const countUsers = async (): Promise<number> => {
+  return prisma.user.count();
 };
 
 export const createUser = async <T = User>(

@@ -54,6 +54,10 @@ export const loginUser = async (loginUserDto: LoginUserDto) => {
     throw CustomError.badRequest("Invalid email or password");
   }
 
+  if (!user.verified) throw CustomError.badRequest("Email not verified");
+
+  if (!user.active) throw CustomError.badRequest("User is not active");
+
   const token = await jwtAdapter.generateToken({ id: user.id });
 
   if (!token) throw CustomError.internalServerError("Error generating token");
@@ -80,6 +84,7 @@ export const validateEmail = async (token: string) => {
   }
 
   user.verified = true;
+  user.active = true;
 
   await updateUser(user);
 
