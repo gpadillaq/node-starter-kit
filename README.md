@@ -11,6 +11,8 @@ This is a Node.js starter kit project that includes user authentication, email v
 - Docker support for PostgreSQL
 - Environment variable management with dotenv
 - TypeScript for type safety
+- Logging with Winston
+- Pagination support
 
 ## Getting Started
 
@@ -138,27 +140,38 @@ npm start
     "token": "your_jwt_token"
   }
   ```
+### Pagination
 
-### User
+#### Get paginated users
 
-#### Get user profile
-
-- **URL:** `/api/user/profile`
+- **URL:** `/api/users`
 - **Method:** `GET`
-- **Headers:**
-  ```json
-  {
-    "Authorization": "Bearer your_jwt_token"
-  }
-  ```
+- **Query Parameters:**
+  - `page` (optional): Page number (default is 1)
+  - `limit` (optional): Number of items per page (default is 10)
 - **Response:**
   ```json
   {
-    "id": "user_id",
-    "email": "user@example.com",
-    "createdAt": "2023-01-01T00:00:00.000Z"
+    "data": [
+      {
+        "id": "user_id",
+        "email": "user@example.com",
+        "createdAt": "2023-01-01T00:00:00.000Z"
+      },
+      ...
+    ],
+    "pagination": {
+      "totalItems": 100,
+      "totalPages": 10,
+      "currentPage": 1,
+      "itemsPerPage": 10
+    }
   }
   ```
+
+## Logging
+
+Logging is configured using Winston. You can find the configuration in `src/config/logger.adapter.ts`.
 
 ## License
 

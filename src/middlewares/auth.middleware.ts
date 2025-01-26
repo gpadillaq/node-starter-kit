@@ -1,6 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { jwtAdapter } from "../config";
+
+import { buildLogger } from "../config";
 import { getUserById } from "../models/user.model";
+import { jwtAdapter } from "../config";
+
+const logger = buildLogger("auth.middleware");
 
 export const authMiddleware = async (
   req: Request,
@@ -32,7 +36,7 @@ export const authMiddleware = async (
 
     next();
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return res.status(500).json("Internal server error");
   }
 };
